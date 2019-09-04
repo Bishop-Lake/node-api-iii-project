@@ -55,12 +55,28 @@ router.get('/:id/posts', validateUserId, (req, res) => {
         })
 });
 
-router.delete('/:id', (req, res) => {
-
+router.delete('/:id', validateUserId, (req, res) => {
+    db.remove(req.user.id)
+        .then(num => {
+            res.status(200).json({Items_deleted: num})
+        })
+        .catch(() => {
+            res.status(500).json({Error: "there was an error deleteing the user"})
+        })
 });
 
-router.put('/:id', (req, res) => {
-
+router.put('/:id', validateUserId, validateUser, (req, res) => {
+    db.update(req.user.id, req.body)
+        .then(num => {
+            if (num == 1) {
+                res.status(200).json({message: "the user was updated succesfully"})
+            } else {
+                res.status(500).json({message: "There was an error updateing the user"})
+            }
+        })
+        .catch(() => {
+            res.status(500).json({message: "There was an error updateing the user"})
+        })
 });
 
 //custom middleware
