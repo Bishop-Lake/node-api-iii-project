@@ -35,8 +35,14 @@ router.get('/', (req, res) => {
         })
 });
 
-router.get('/:id', (req, res) => {
-
+router.get('/:id', validateUserId, (req, res) => {
+    db.getById(req.user.id)
+        .then(user => {
+            res.status(200).json(user)
+        })
+        .catch(() => {
+            res.status(500).json({Error: "there was an error getting the user from the server"})
+        })
 });
 
 router.get('/:id/posts', (req, res) => {
