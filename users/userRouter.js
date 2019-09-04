@@ -1,9 +1,9 @@
-const express = 'express';
+const express = require('express');
 
 const router = express.Router();
 
 router.post('/', (req, res) => {
-
+    
 });
 
 router.post('/:id/posts', (req, res) => {
@@ -11,7 +11,7 @@ router.post('/:id/posts', (req, res) => {
 });
 
 router.get('/', (req, res) => {
-
+    res.send(`this indeed works @ ${req.url}`)
 });
 
 router.get('/:id', (req, res) => {

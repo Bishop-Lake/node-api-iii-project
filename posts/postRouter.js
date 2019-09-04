@@ -1,9 +1,9 @@
-const express = 'express';
+const express = require('express');
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
-
+    res.send(`this indeed works @ ${req.url}`)
 });
 
 router.get('/:id', (req, res) => {
