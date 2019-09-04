@@ -4,11 +4,17 @@ const db = require('./userDb')
 const router = express.Router();
 
 router.post('/', validateUser, (req, res) => {
-    res.send('hello')
+    db.insert(req.body)
+        .then(user => {
+            res.status(201).json(user)
+        })
+        .catch(() => {
+            res.status(500).json({Error: "There was an issue adding the user to the database"})
+        })
 });
 
-router.post('/:id/posts', (req, res) => {
-
+router.post('/:id/posts', validatePost, (req, res) => {
+    res.send('hello')
 });
 
 router.get('/', (req, res) => {
@@ -53,7 +59,12 @@ function validateUser(req, res, next) {
 };
 
 function validatePost(req, res, next) {
-
+    if (Object.keys(req.body).length == 0) {
+        res.status(400).json({ message: "missing post data" })
+    } else if (req.body.text == null) {
+        res.status(400).json({ message: "missing required text field" })
+    }
+    next()
 };
 
 module.exports = router;
