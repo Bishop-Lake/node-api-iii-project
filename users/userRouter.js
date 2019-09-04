@@ -1,5 +1,6 @@
 const express = require('express');
 const db = require('./userDb')
+const pdb = require('../posts/postDb')
 
 const router = express.Router();
 
@@ -13,8 +14,15 @@ router.post('/', validateUser, (req, res) => {
         })
 });
 
-router.post('/:id/posts', validatePost, (req, res) => {
-    res.send('hello')
+router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
+    req.body = {...req.body, user_id: req.user.id}
+    pdb.insert(req.body)
+        .then(post => {
+            res.status(201).json(post)
+        })
+        .catch(() => {
+            res.status(500).json({Error: "There was an issue adding the post to the database"})
+        })
 });
 
 router.get('/', (req, res) => {
@@ -46,7 +54,15 @@ router.put('/:id', (req, res) => {
 //custom middleware
 
 function validateUserId(req, res, next) {
-
+    db.getById(req.params.id)
+        .then(userWithId => {
+            if (userWithId == undefined) {
+                res.status(400).json({ message: "invalid user id" })
+            } else {
+                req.user = userWithId
+                next()
+            }
+        })
 };
 
 function validateUser(req, res, next) {
