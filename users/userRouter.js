@@ -75,7 +75,7 @@ router.put('/:id', validateUserId, validateUser, (req, res) => {
             }
         })
         .catch(() => {
-            res.status(500).json({message: "There was an error updateing the user"})
+            res.status(500).json({message: "There was an error updating the user"})
         })
 });
 
@@ -112,3 +112,5 @@ function validatePost(req, res, next) {
 };
 
 module.exports = router;
+
+
